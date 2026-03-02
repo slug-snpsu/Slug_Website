@@ -24,60 +24,74 @@ const getAllEventsController = async (req, res) => {
 
 
 
-const registrationForEventController = async(req,res) => {
-    const event_id = req.params.event_id; 
+const registrationForEventController = async (req, res) => {
+    const event_id = req.params.event_id;
     const user_id = req.user._id;
-    console.log(event_id,user_id)
-    if(!user_id){
-        return res.status(400),json({status:false,message:"All fields are require"});
+
+
+    if (!user_id) {
+        return res.status(400), json({ status: false, message: "All fields are require" });
     }
 
-    try{
+    try {
         const userData = await USER.findById(user_id);
-        if(!userData) {
-            return res.status(404).json({status:false,message:"Account not found"});
+        if (!userData) {
+            return res.status(404).json({ status: false, message: "Account not found" });
         }
 
-        const updateRegration = await EVENT.findByIdAndUpdate(event_id,{ $addToSet: { eventParticipantsList: user_id } },{returnDocument: "after", runValidators: true });
-        if(!updateRegration) {
-            return res.status(400).json({status:false,message:"Failed to Register."});
+        const updateRegration = await EVENT.findByIdAndUpdate(event_id, { $addToSet: { eventParticipantsList: user_id } }, { returnDocument: "after", runValidators: true });
+
+        if (!updateRegration) {
+            return res.status(400).json({ status: false, message: "Failed to Register." });
         }
 
-        return res.status(201).json({status:true,message:"Register Successfully."});
-    }catch(error){
+        return res.status(200).json({ status: true, message: "Register Successfully." });
+    } catch (error) {
         console.log(error);
-        return res.status(500).json({status:false,message:"Server error."});
+        return res.status(500).json({ status: false, message: "Server error." });
     }
 }
 
 
 
+const registrationCancelForEventController = async (req, res) => {
+    const event_id = req.params.event_id;
+    const user_id = req.user._id;
 
+    if (!user_id) {
+        return res.status(400).json({status: false,message: "User ID is required",
+        });
+    }
 
+    try {
+        const userData = await USER.findById(user_id);
+        if (!userData) {
+            return res.status(404).json({status: false,message: "Account not found",
+            });
+        }
 
+        const updatedRegistrationCancel = await EVENT.findByIdAndUpdate(event_id,{ $pull: { eventParticipantsList: user_id } },{ new: true, runValidators: true }
+        );
 
+        if (!updatedRegistrationCancel) {
+            return res.status(400).json({status: false,message: "Failed to cancel registration.",
+            });
+        }
 
+        console.log(updatedRegistrationCancel);
+        return res.status(200).json({status: true,message: "Registration cancelled successfully.",});
 
-
-
-
-
-
-
-
-
-
-
-
-
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({status: false,message: "Server error."});
+    }
+};
 
 // only for admin adding events
 const addEventController = async (req, res) => {
     const { eventTitle, eventDescription, eventStartDate, eventEndDate, eventMaxParticipants, eventLocation, eventCreatedBy, eventMode } = req.body;
     const eventImage = req.file;
 
-
-    console.log(eventTitle, eventDescription, eventStartDate, eventEndDate, eventMaxParticipants, eventLocation, eventCreatedBy, eventMode)
 
     if (!eventImage || !eventTitle || !eventDescription || !eventStartDate || !eventEndDate || !eventMaxParticipants || !eventLocation || !eventCreatedBy) {
         return res.status(400).json({ status: false, message: "All fields are required." });
@@ -182,6 +196,7 @@ const deleteEventController = async (req, res) => {
 module.exports = {
     getAllEventsController,
     registrationForEventController,
+    registrationCancelForEventController,
     addEventController,
     updateEventController,
     deleteEventController
