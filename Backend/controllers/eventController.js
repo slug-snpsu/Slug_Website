@@ -101,10 +101,13 @@ const addEventController = async (req, res) => {
     try {
         const isPublisherAdmin = await USER.findById(eventCreatedBy);
         if (!isPublisherAdmin) {
+            fs.unlinkSync(eventImage.path);
             return res.status(404).json({ status: false, message: "Account Not Found." });
         }
         if (isPublisherAdmin.role !== process.env.ADMIN_STRING) {
+            fs.unlinkSync(eventImage.path);
             return res.status(400).json({ status: false, message: "You are not admin." });
+            
         }
 
         // Upload to Cloudinary
