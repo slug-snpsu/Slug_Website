@@ -173,4 +173,101 @@ const Welcome_Email_Template = `
 `;
 
 
-module.exports = {Verification_Email_Template,Welcome_Email_Template}
+
+
+const Event_Registration_Email_Template = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Registration Confirmation</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+    .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+    .header {
+        background-color: #28a745;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .content {
+        padding: 25px;
+        line-height: 1.8;
+    }
+    .event-box {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 20px 0;
+        border: 1px solid #e0e0e0;
+    }
+    .button {
+        display: inline-block;
+        padding: 12px 25px;
+        margin: 20px 0;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .footer {
+        background-color: #f4f4f4;
+        padding: 15px;
+        text-align: center;
+        color: #777;
+        font-size: 12px;
+        border-top: 1px solid #ddd;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">🎉 Registration Confirmed!</div>
+    <div class="content">
+        <p>Hello <strong>{name}</strong>,</p>
+        <p>Great news! You have successfully registered for the event.</p>
+
+        <div class="event-box">
+            <p><strong>Event:</strong> {eventName}</p>
+            <p><strong>Date:</strong> {eventDate}</p>
+            <p><strong>Location:</strong> {eventLocation}</p>
+        </div>
+
+        <p>We’re excited to have you join us. Make sure to mark your calendar!</p>
+
+        <a href="http://10.241.193.232:5173/events" class="button">View Event Details</a>
+
+        <p>If you have any questions, feel free to contact us.</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; ${new Date().getFullYear()} SLUG. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>
+`;
+
+
+
+
+module.exports = {Verification_Email_Template,Welcome_Email_Template,Event_Registration_Email_Template}
