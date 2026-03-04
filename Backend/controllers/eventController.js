@@ -2,6 +2,7 @@ const USER = require("../models/user");
 const EVENT = require("../models/events");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
+const { eventRegistrationMessage } = require("../middleware/email");
 
 
 // for user to get all events
@@ -45,6 +46,8 @@ const registrationForEventController = async (req, res) => {
             return res.status(400).json({ status: false, message: "Failed to Register." });
         }
 
+        //Sending email
+        eventRegistrationMessage(userData.email,userData.name, updateRegration.eventTitle, updateRegration.eventStartDate, updateRegration.eventLocation);
         return res.status(200).json({ status: true, message: "Register Successfully." });
     } catch (error) {
         console.log(error);
@@ -70,7 +73,7 @@ const registrationCancelForEventController = async (req, res) => {
             });
         }
 
-        const updatedRegistrationCancel = await EVENT.findByIdAndUpdate(event_id,{ $pull: { eventParticipantsList: user_id } },{ new: true, runValidators: true }
+        const updatedRegistrationCancel = await EVENT.findByIdAndUpdate(event_id,{ $pull: { eventParticipantsList: user_id } },{ returnDocument: "after", runValidators: true }
         );
 
         if (!updatedRegistrationCancel) {
