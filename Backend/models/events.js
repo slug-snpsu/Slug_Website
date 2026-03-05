@@ -22,6 +22,13 @@ const eventSchema = new mongoose.Schema({
         maxlength: 1000,
     },
 
+    eventCategory:{
+        type:String,
+        required: true,
+        trim: true,
+        minlength: 3,
+        enum:["Hackthon","Session","Work shop"]
+    },
     eventStartDate: {
         type: Date,
         required: true,
@@ -46,7 +53,6 @@ const eventSchema = new mongoose.Schema({
     eventMaxParticipants: {
         type: Number,
         required: true,
-        min: 1,
     },
 
     eventLocation: {
