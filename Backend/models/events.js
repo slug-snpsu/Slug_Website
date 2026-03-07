@@ -37,12 +37,7 @@ const eventSchema = new mongoose.Schema({
     eventEndDate: {
         type: Date,
         required: true,
-        validate: {
-            validator: function(value) {
-                return value >= this.eventStartDate;
-            },
-            message: "End date must be after start date."
-        }
+
     },
 
     eventParticipantsList: [{
@@ -59,11 +54,6 @@ const eventSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-    },
-
-    isEventActive: {
-        type: Boolean,
-        default: true,
     },
 
     eventCreatedBy: {
