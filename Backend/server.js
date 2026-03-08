@@ -14,7 +14,7 @@ connectDB();
 // routers
 const authRouter = require('./routes/authRoute');
 const eventRouter = require('./routes/eventRoute');
-
+const hackathonRouter = require('./routes/hackathonRoute');
 
 // home page
 app.get("/" , (req,res) => {
@@ -32,6 +32,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/events",eventRouter);
 
 
+app.use("/api/hackathon",hackathonRouter)
 
 
 app.listen(PORT , () => {
