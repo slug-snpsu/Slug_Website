@@ -47,7 +47,7 @@ const registrationForEventController = async (req, res) => {
         }
 
         //Sending email
-        eventRegistrationMessage(userData.email,userData.name, updateRegration.eventTitle, updateRegration.eventStartDate, updateRegration.eventLocation);
+        eventRegistrationMessage(userData.email, userData.name, updateRegration.eventTitle, updateRegration.eventStartDate, updateRegration.eventLocation);
         return res.status(200).json({ status: true, message: "Register Successfully." });
     } catch (error) {
         console.log(error);
@@ -201,11 +201,77 @@ const deleteEventController = async (req, res) => {
 
 
 
+
+
+
+
+
+
+const getAllUserDataWhoAreRegisteredForParticularEventController = async (req, res) => {
+    const eventID = req.params._id;
+    const getterID = req.user._id;
+
+    if (!eventID || !getterID) {
+        return res.status(400).json({ status: false, message: "event id is required" });
+    }
+
+    try {
+        const getter = await USER.findById(getterID);
+
+        if (!getter) {
+            return res.status(404).json({ status: false, message: "Account Not Found." });
+        }
+        if (getter.role !== process.env.ADMIN_STRING) {
+            return res.status(400).json({ status: false, message: "You are not admin." });
+        }
+
+        // const getAllRegisteredUserId = await EVENT.findById(eventID).select("eventParticipantsList");
+
+        // if(!getAllRegisteredUserId) {
+        //     return res.status(404).json({ status: false, message: "Event Not Found." });
+        // }
+
+        // const getAllUserData = await USER.findById(getAllRegisteredUserId).select("name srn email");
+        const eventParticipantsData = await EVENT.findById(eventID).select("eventParticipantsList").populate("eventParticipantsList", "name email srn");
+
+        if (!eventParticipantsData) {
+            return res.status(404).json({ status: false, message: "Event Not Found" });
+        }
+
+        return res.status(200).json({ status: true, message: "Got the Data", eventParticipantsData: eventParticipantsData });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ status: false, message: "Server error" });
+    }
+}
+
+
+// json data 
+
+
+// {
+//     "status": true,
+//     "message": "Got the Data",
+//     "eventParticipantsData": {
+//         "_id": "69b4b1b97c6a7606d259a7a8",
+//         "eventParticipantsList": [
+//             {
+//                 "_id": "6999b6d82482f672aabd9a7c",
+//                 "name": "Nuthan prasad",
+//                 "srn": "24SUUBECS1389",
+//                 "email": "nuthan@gmail.com"
+//             }
+//         ]
+//     }
+// }
+
+
 module.exports = {
     getAllEventsController,
     registrationForEventController,
     registrationCancelForEventController,
     addEventController,
     updateEventController,
-    deleteEventController
+    deleteEventController,
+    getAllUserDataWhoAreRegisteredForParticularEventController
 }
