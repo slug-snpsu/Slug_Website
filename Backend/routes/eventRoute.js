@@ -1,5 +1,7 @@
 const express = require("express");
-const { getAllEventsController, registrationForEventController, registrationCancelForEventController, addEventController, updateEventController, deleteEventController} = require("../controllers/eventController");
+const { getAllEventsController, registrationForEventController, registrationCancelForEventController, addEventController, updateEventController, deleteEventController
+    ,getAllUserDataWhoAreRegisteredForParticularEventController
+} = require("../controllers/eventController");
 const { verifyToken } = require("../util/JWT.Token"); 
 const upload = require("../middleware/multer")
 const router = express.Router();
@@ -29,4 +31,7 @@ router.put("/updateEvents",verifyToken,updateEventController)
 router.delete("/deleteEvents/:_id",verifyToken,deleteEventController);
 
 
+
+
+router.get("/getAllParticipantsData/:_id",verifyToken,getAllUserDataWhoAreRegisteredForParticularEventController)
 module.exports = router;
